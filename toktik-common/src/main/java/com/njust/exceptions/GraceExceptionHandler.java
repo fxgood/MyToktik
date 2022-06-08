@@ -2,6 +2,7 @@ package com.njust.exceptions;
 
 import com.njust.grace.result.GraceJSONResult;
 import com.njust.grace.result.ResponseStatusEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,6 +20,7 @@ import java.util.Map;
  * 可以针对异常的类型进行捕获，然后返回json信息到前端
  */
 @ControllerAdvice
+@Slf4j
 public class GraceExceptionHandler {
 
     @ExceptionHandler(MyCustomException.class)  //专门处理MyCustomException这个异常类的,只要程序中抛出这个异常,就会执行下面的逻辑,给前端返回消息
@@ -29,11 +31,13 @@ public class GraceExceptionHandler {
         return GraceJSONResult.exception(e.getResponseStatusEnum());
     }
 
+    //统一封装BO的校验,避免直接写在接口中,对接口产生侵入性
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public GraceJSONResult returnMethodArgumentNotValid(MethodArgumentNotValidException e) {
         BindingResult result = e.getBindingResult();
         Map<String, String> map = getErrors(result);
+        log.info(map.toString());
         return GraceJSONResult.errorMap(map);
     }
 
