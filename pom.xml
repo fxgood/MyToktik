@@ -84,11 +84,12 @@
 				<version>${pagehelper-spring-boot-starter.version}</version>
 			</dependency>
 
-			<dependency>
-			<groupId>com.squareup.okhttp3</groupId>
-			<artifactId>okhttp</artifactId>
-			<version>${okhttp.version}</version>
-			</dependency>
+<!--			如果不注释掉,测试minio文件上传的时候会报错-->
+<!--			<dependency>-->
+<!--			<groupId>com.squareup.okhttp3</groupId>-->
+<!--			<artifactId>okhttp</artifactId>-->
+<!--			<version>${okhttp.version}</version>-->
+<!--			</dependency>-->
 
 			<!-- jackson -->
 			<dependency>

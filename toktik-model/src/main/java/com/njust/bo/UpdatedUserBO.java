@@ -9,6 +9,7 @@ import lombok.ToString;
 import java.util.Date;
 
 //被修改的用户信息
+//为什么不直接用users,因为有些信息不能被修改如mobile
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
