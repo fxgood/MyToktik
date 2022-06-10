@@ -3,27 +3,32 @@ package com.njust.intercerptor;
 import com.njust.base.BaseInfoProperties;
 import com.njust.exceptions.GraceException;
 import com.njust.grace.result.ResponseStatusEnum;
-import com.njust.utils.IPUtil;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Slf4j
-public class LoginInterceptor extends BaseInfoProperties implements HandlerInterceptor {
+//对用户的登录状态进行检查(修改个人信息,修改头像,修改背景图之前的检查)
+public class UserTokenInterceptor extends BaseInfoProperties implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        //获得用户ip
-        String userIp= IPUtil.getRequestIp(request);
-        boolean isExist = redis.keyIsExist(MOBILE_SMSCODE + ":" + userIp);
-        if(isExist){
-            GraceException.display(ResponseStatusEnum.SMS_NEED_WAIT_ERROR);
-            log.info("短信发送频率太大!");
-            return false;   //请求拦截
+        String userId = request.getHeader("headerUserId");
+        String userToken = request.getHeader("headerUserToken");
+        if(StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(userToken)){
+            String redisToken = redis.get(REDIS_USER_TOKEN + ":" + userId);
+            if(StringUtils.isBlank(redisToken)){
+                GraceException.display(ResponseStatusEnum.UN_LOGIN);   //抛异常
+            }else{
+                if(!redisToken.equals(userToken)){
+                    GraceException.display(ResponseStatusEnum.TICKET_INVALID);  //抛异常
+                }
+            }
+        }else{
+            GraceException.display(ResponseStatusEnum.UN_LOGIN);    //抛异常
         }
-        return true;   //请求放行
+        return true;    //请求放行
     }
 
     @Override

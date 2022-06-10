@@ -2,6 +2,7 @@ package com.njust.controller;
 
 
 import com.njust.MinIOConfig;
+import com.njust.base.BaseInfoProperties;
 import com.njust.bo.UpdatedUserBO;
 import com.njust.enums.FileTypeEnum;
 import com.njust.enums.UserInfoModifyType;
@@ -25,7 +26,7 @@ import java.util.Objects;
 @RequestMapping("userInfo")
 @Slf4j
 @Api(tags = "用户信息接口")
-public class UserInfoController extends BaseInfoProperties{
+public class UserInfoController extends BaseInfoProperties {
 
     @Autowired
     private UserService userService;

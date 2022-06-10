@@ -1,6 +1,7 @@
 package com.njust.controller;
 
 
+import com.njust.base.BaseInfoProperties;
 import com.njust.bo.RegistLoginBO;
 import com.njust.grace.result.GraceJSONResult;
 import com.njust.grace.result.ResponseStatusEnum;
@@ -70,6 +71,7 @@ public class LoginController extends BaseInfoProperties {
         //保存用户信息
         String uToken = UUID.randomUUID().toString();
         redis.set(REDIS_USER_TOKEN + ":" + user.getId(), uToken);    //过期时间:默认永久
+        //注意:如果多端登录,那么此设备的登录信息会把之前的挤掉(之前的token失效)
 
         //用户登录注册成功以后,删除redis中的短信验证码
         redis.del(MOBILE_SMSCODE + ":" + mobile);
