@@ -16,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
     public PagedGridResult getIndexVlogList(String search,
                                             Integer page,
                                             Integer pageSize) {
-        PageHelper.startPage(page,pageSize);
+        PageHelper.startPage(page,pageSize);    //todo 这里是如何实现分页的?
         Map<String,Object> mp=new HashMap<>();
         if(StringUtils.isNotBlank(search))
             mp.put("search",search);
@@ -73,5 +74,29 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
             return vlogVO;
         }
         return null;
+    }
+
+    @Transactional
+    @Override
+    public void changeToPrivateOrPublic(String userId, String vlogId, Integer yesOrNo) {
+
+        Example example=new Example(Vlog.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("id",vlogId);
+        criteria.andEqualTo("vlogerId",userId);
+        Vlog pendingVlog=new Vlog();
+        pendingVlog.setIsPrivate(yesOrNo);
+        vlogMapper.updateByExampleSelective(pendingVlog/*更新的内容*/,example/*更新的目标行*/);
+    }
+
+    @Override
+    public PagedGridResult queryMyVlogList(String userId, Integer page, Integer pageSize, Integer yesOrNo) {
+        Example example=new Example(Vlog.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("vlogerId",userId);
+        criteria.andEqualTo("isPrivate",yesOrNo);
+        List<Vlog> vlogs = vlogMapper.selectByExample(example);
+        PageHelper.startPage(page,pageSize);    //分页这块暂时没有整明白
+        return setterPagedGrid(vlogs,page);
     }
 }

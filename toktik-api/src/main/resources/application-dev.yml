@@ -19,7 +19,7 @@ spring:
       connection-test-query: SELECT 1
   redis:
 #    host: 192.168.139.130  原来使用的是NAT,主机和虚拟机在同一个局域网,但是虚拟机不与其他设备在同一个局域网
-    host: 192.168.1.106
+    host: 192.168.1.111
     port: 6379
     database: 0
     password:
@@ -30,8 +30,8 @@ spring:
 
 
 minio:
-  endpoint: http://192.168.1.106:9000
-  fileHost: http://192.168.1.106:9000
+  endpoint: http://192.168.1.111:9000
+  fileHost: http://192.168.1.111:9000
   bucketName: toktik
   accessKey: minioadmin
   secretKey: minioadmin
