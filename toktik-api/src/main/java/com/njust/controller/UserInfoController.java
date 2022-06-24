@@ -31,8 +31,6 @@ public class UserInfoController extends BaseInfoProperties {
     @Autowired
     private UserService userService;
 
-
-
     @GetMapping("query")    //是否应该改造一下? 你想查就查?不得带个令牌啥的
     public GraceJSONResult query(@RequestParam String userId){
         Users user= userService.getUserById(userId);

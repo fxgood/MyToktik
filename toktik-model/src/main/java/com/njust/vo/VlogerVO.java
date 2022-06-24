@@ -9,6 +9,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+//展示给前端的,用于关注列表
 public class VlogerVO {
     private String vlogerId;
     private String nickname;

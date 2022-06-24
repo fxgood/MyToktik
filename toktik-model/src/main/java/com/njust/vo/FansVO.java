@@ -14,4 +14,5 @@ public class FansVO {
     private String nickname;
     private String face;
     private boolean isFriend = false;
+    private Integer help;
 }
