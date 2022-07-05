@@ -30,8 +30,8 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
     @Autowired
     private Sid sid;    //生成uuid的
 
-    @Autowired
-    private RedisOperator redis;
+/*    @Autowired
+    private RedisOperator redis;*/
     @Transactional  //涉及到数据库非查询操作
     @Override
     public void createFollow(String userId, String vlogerId) {

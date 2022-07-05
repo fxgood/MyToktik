@@ -37,7 +37,7 @@ public class UsersVO {
 
     private Integer myFollowsCounts;    //我关注的博主的总数
     private Integer myFansCounts;   //我的粉丝的数量
-//    private Integer myLikedVlogCounts;  //点赞我的视频的总数
+    //private Integer myLikedVlogCounts;  //点赞我的视频的总数
     private Integer totalLikeMeCounts;      //点赞我的总数
 }
 

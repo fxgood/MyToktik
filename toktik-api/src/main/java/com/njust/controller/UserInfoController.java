@@ -48,13 +48,14 @@ public class UserInfoController extends BaseInfoProperties {
         Integer myFollowsCounts=0;    //我关注的博主的总数
         Integer myFansCounts=0;   //我的粉丝的数量
         Integer totalLikeMeCounts=0;      //点赞我的总数
-
         if(StringUtils.isNotBlank(myFollowCountsStr))
             myFollowsCounts=Integer.parseInt(myFollowCountsStr);
         if(StringUtils.isNotBlank(myFansCountsStr))
             myFansCounts=Integer.parseInt(myFansCountsStr);
-        if(StringUtils.isNotBlank(likedVlogCountsStr) && StringUtils.isNotBlank(likedVlogerCountsStr))
-            totalLikeMeCounts=Integer.parseInt(likedVlogCountsStr)+Integer.parseInt(likedVlogerCountsStr);
+        if(StringUtils.isNotBlank(likedVlogCountsStr))
+            totalLikeMeCounts+=Integer.parseInt(likedVlogCountsStr);
+        if(StringUtils.isNotBlank(likedVlogerCountsStr))
+            totalLikeMeCounts+=Integer.parseInt(likedVlogerCountsStr);
         usersVO.setTotalLikeMeCounts(totalLikeMeCounts);
         usersVO.setMyFansCounts(myFansCounts);
         usersVO.setMyFollowsCounts(myFollowsCounts);

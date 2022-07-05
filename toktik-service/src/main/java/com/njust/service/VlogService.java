@@ -14,7 +14,8 @@ public interface VlogService {
     public void createVlog(VlogBO vlogBO);
 
     //查询or搜索vlog列表
-    public PagedGridResult getIndexVlogList(String search,
+    public PagedGridResult getIndexVlogList(String userId,
+                                            String search,
                                             Integer page,
                                             Integer pageSize);    //search可以为空,代表首页视频列表;不为空则是搜索页面的视频列表
     //根据视频主键查询vloger详细信息
@@ -31,4 +32,8 @@ public interface VlogService {
                                            Integer pageSize,
                                            Integer yesOrNo);
 
+    //用户点赞某视频
+    public void userLikeVlog(String userId,String vlogerId,String vlogId);
+
+    void unlike(String userId, String vlogerId, String vlogId);
 }

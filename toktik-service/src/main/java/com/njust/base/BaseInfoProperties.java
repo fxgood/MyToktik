@@ -32,7 +32,8 @@ public class BaseInfoProperties {
     public static final String REDIS_VLOG_BE_LIKED_COUNTS = "redis_vlog_be_liked_counts";
     public static final String REDIS_VLOGER_BE_LIKED_COUNTS = "redis_vloger_be_liked_counts";
 
-
+    //视频被某个用户点赞
+    public static final String REDIS_USER_LIKE_VLOG="redis_user_like_vlog";
     public PagedGridResult setterPagedGrid(List<?> list,
                                            Integer page) {
         PageInfo<?> pageList = new PageInfo<>(list);

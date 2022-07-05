@@ -41,7 +41,8 @@ public class LoginController extends BaseInfoProperties {
         }
         //获取用户ip
         String userIp = IPUtil.getRequestIp(request);
-        redis.setnx60s(MOBILE_SMSCODE + ":" + userIp, "1");  //value随便填
+        //redis.setnx60s(MOBILE_SMSCODE + ":" + userIp, "1");  //value随便填
+        redis.setnx10s(MOBILE_SMSCODE + ":" + userIp, "1");  //同一个ip地址限制10s内不能重复登录
         log.info("用户的ip地址是" + userIp);
         //todo根据ip限制60s内只能获取一次验证码
 

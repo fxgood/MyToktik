@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginInterceptor extends BaseInfoProperties implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        //获得用户ip
+        //获得用户ip,同一个Ip地址不能频繁登录
         String userIp= IPUtil.getRequestIp(request);
         boolean isExist = redis.keyIsExist(MOBILE_SMSCODE + ":" + userIp);
         if(isExist){
