@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.njust.base.BaseInfoProperties;
 import com.njust.bo.VlogBO;
 import com.njust.enums.YesOrNo;
+import com.njust.exceptions.GraceException;
+import com.njust.grace.result.ResponseStatusEnum;
 import com.njust.mapper.MyLikedVlogMapper;
 import com.njust.mapper.VlogMapper;
 import com.njust.mapper.VlogMapperCustom;
@@ -59,32 +61,57 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
     private UserService userService;
 
     @Override
+    public Integer vlogLikedCounts(String vlogId) {
+        String s = redis.get(REDIS_VLOG_BE_LIKED_COUNTS + ":" + vlogId);
+        if(s==null)
+            return 0;
+        return Integer.parseInt(s);
+    }
+
+    @Override
+    public PagedGridResult mylikedList(String userId, Integer page, Integer pageSize) {
+        PageHelper.startPage(page,pageSize);
+        Map<String,Object>mp=new HashMap<>();
+        mp.put("userId",userId);
+        List<IndexVlogVO> myLikedVlogList = vlogMapperCustom.getMyLikedVlogList(mp);
+        return setterPagedGrid(myLikedVlogList,page);
+    }
+
+    @Override
     public PagedGridResult getIndexVlogList(String userId,
                                             String search,
                                             Integer page,
                                             Integer pageSize) {
-        PageHelper.startPage(page, pageSize);    //todo 这里是如何实现分页的?
+        PageHelper.startPage(page, pageSize);    // 这里是如何实现分页的? 底层通过修改sql来实现的
         Map<String, Object> mp = new HashMap<>();
         if (StringUtils.isNotBlank(search))
             mp.put("search", search);
         List<IndexVlogVO> list = vlogMapperCustom.getIndexVlogList(mp);
-        //当前用户是否点赞了该视频,用于首页的视频是否显示小红心
         for(IndexVlogVO vo:list){
+            //当前用户是否点赞了该视频,用于首页的视频是否显示小红心
             String vlogId=vo.getVlogId();
-            String s = redis.get(REDIS_USER_LIKE_VLOG + ":" +userId+ ":" + vlogId);
-            if(s!=null)
-                vo.setDoILikeThisVlog(true);
+            vo.setDoILikeThisVlog(doILikeVlog(userId,vlogId));
+            //当前视频的点赞数
+            vo.setLikeCounts(vlogLikedCounts(vlogId));
         }
         return setterPagedGrid(list, page);
     }
 
+    public boolean doILikeVlog(String userId,String vlogId){
+        return redis.get(REDIS_USER_LIKE_VLOG + ":" +userId+ ":" + vlogId)!=null;
+    }
+
     @Override
-    public IndexVlogVO getVlogDetailById(String vlogId) {
+    public IndexVlogVO getVlogDetailById(String userId,String vlogId) {
         Map<String, Object> mp = new HashMap<>();
         mp.put("vlogId", vlogId);
         List<IndexVlogVO> list = vlogMapperCustom.getVlogDetailById(mp);
         if (list != null && list.size() > 0) {
             IndexVlogVO vlogVO = list.get(0);
+            //查询是否被当前用户所喜欢
+            vlogVO.setDoILikeThisVlog(doILikeVlog(userId,vlogId));
+            //查询当前视频的点赞数
+            vlogVO.setLikeCounts(vlogLikedCounts(vlogId));
             return vlogVO;
         }
         return null;

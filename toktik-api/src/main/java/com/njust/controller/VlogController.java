@@ -31,7 +31,18 @@ public class VlogController extends BaseInfoProperties {
     @Autowired
     private VlogService vlogService;
 
-
+    @GetMapping("myLikedList")
+    public GraceJSONResult myLikedList(@RequestParam String userId,
+                                       @RequestParam Integer page,
+                                       @RequestParam Integer pageSize){
+        PagedGridResult result = vlogService.mylikedList(userId, page, pageSize);
+        return GraceJSONResult.ok(result);
+    }
+    @PostMapping("totalLikedCounts")
+    public GraceJSONResult totalLikedCounts(@RequestParam String vlogId){
+        Integer cnt=vlogService.vlogLikedCounts(vlogId);
+        return GraceJSONResult.ok(cnt);
+    }
 
     @PostMapping("unlike")
     public GraceJSONResult unlike(@RequestParam String userId,
@@ -56,7 +67,7 @@ public class VlogController extends BaseInfoProperties {
         Users vloger=userService.getUserById(vlogerId);
         if(user==null || vloger==null)
             return GraceJSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST_ERROR);
-        IndexVlogVO vlogDetailById = vlogService.getVlogDetailById(vlogId);
+        IndexVlogVO vlogDetailById = vlogService.getVlogDetailById(userId,vlogId);
         if(vlogDetailById==null)
             return GraceJSONResult.errorMsg("vlog不存在");
         vlogService.userLikeVlog(userId,vlogerId,vlogId);
@@ -87,7 +98,7 @@ public class VlogController extends BaseInfoProperties {
     @GetMapping("detail")
     public GraceJSONResult detail(@RequestParam(defaultValue = "") String userId,
                                   @RequestParam String vlogId) {
-        IndexVlogVO detail = vlogService.getVlogDetailById(vlogId);
+        IndexVlogVO detail = vlogService.getVlogDetailById(userId,vlogId);
         return GraceJSONResult.ok(detail);
     }
 
