@@ -74,12 +74,14 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
         redis.del(REDIS_FANS_AND_VLOGGER_RELATIONSHIP+":"+userId+":"+vlogerId);   //取消a关注b
     }
 
+
     @Override
     public boolean isFollow(String userId, String vlogerId) {
         //return queryFans(userId, vlogerId) != null;
         //使用redis缓存
         String key=REDIS_FANS_AND_VLOGGER_RELATIONSHIP+":"+userId+":"+vlogerId;
         String value=redis.get(key);
+        //查询数据库
         return value != null;
     }
 

@@ -11,6 +11,7 @@ import com.njust.mapper.VlogMapper;
 import com.njust.mapper.VlogMapperCustom;
 import com.njust.pojo.MyLikedVlog;
 import com.njust.pojo.Vlog;
+import com.njust.service.FansService;
 import com.njust.service.UserService;
 import com.njust.service.VlogService;
 import com.njust.utils.PagedGridResult;
@@ -34,6 +35,9 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
     @Autowired
     private VlogMapper vlogMapper;
+
+    @Autowired
+    private FansService fansService;
 
     @Autowired
     private Sid sid;    //雪花算法生成唯一id
@@ -78,6 +82,28 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
     }
 
     @Override
+    public PagedGridResult getMyFollowVlogList(String userId, Integer page, Integer pageSize) {
+        PageHelper.startPage(page,pageSize);
+        Map<String,Object>mp=new HashMap<>();
+        mp.put("userId",userId);
+        List<IndexVlogVO> myFollowVlogList = vlogMapperCustom.getMyFollowVlogList(mp);
+        return addInfoToVlogList(userId, page, myFollowVlogList);
+    }
+
+    private PagedGridResult addInfoToVlogList(String userId, Integer page, List<IndexVlogVO> myFollowVlogList) {
+        for(IndexVlogVO vo:myFollowVlogList){
+            //当前用户是否点赞了该视频,用于首页的视频是否显示小红心
+            String vlogId=vo.getVlogId();
+            vo.setDoILikeThisVlog(doILikeVlog(userId,vlogId));
+            //当前视频的点赞数
+            vo.setLikeCounts(vlogLikedCounts(vlogId));
+            //是否关注当前博主
+            vo.setDoIFollowVloger(fansService.isFollow(userId,vo.getVlogerId()));
+        }
+        return setterPagedGrid(myFollowVlogList,page);
+    }
+
+    @Override
     public PagedGridResult getIndexVlogList(String userId,
                                             String search,
                                             Integer page,
@@ -87,14 +113,7 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         if (StringUtils.isNotBlank(search))
             mp.put("search", search);
         List<IndexVlogVO> list = vlogMapperCustom.getIndexVlogList(mp);
-        for(IndexVlogVO vo:list){
-            //当前用户是否点赞了该视频,用于首页的视频是否显示小红心
-            String vlogId=vo.getVlogId();
-            vo.setDoILikeThisVlog(doILikeVlog(userId,vlogId));
-            //当前视频的点赞数
-            vo.setLikeCounts(vlogLikedCounts(vlogId));
-        }
-        return setterPagedGrid(list, page);
+        return addInfoToVlogList(userId, page, list);
     }
 
     public boolean doILikeVlog(String userId,String vlogId){

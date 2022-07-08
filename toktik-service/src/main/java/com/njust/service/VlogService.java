@@ -41,4 +41,9 @@ public interface VlogService {
 
     //查询我喜欢的视频列表
     PagedGridResult mylikedList(String userId, Integer page, Integer pageSize);
+
+    //查询我关注的博主的视频列表
+    PagedGridResult getMyFollowVlogList(String userId,
+                                        Integer page,
+                                        Integer pageSize);
 }

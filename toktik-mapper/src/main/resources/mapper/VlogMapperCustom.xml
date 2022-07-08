@@ -2,6 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.njust.mapper.VlogMapperCustom"  >
 
+    <select id="getMyFollowVlogList" parameterType="map" resultType="com.njust.vo.IndexVlogVO">
+        select
+            u.face as vlogerFace,
+            u.nickname as vlogerName,
+            v.id as vlogId,
+            v.vloger_id as vlogerId,
+            v.title as content,
+            v.url as url,
+            v.cover as cover,
+            v.width as width,
+            v.height as height,
+            v.like_counts as likeCounts,
+            v.comments_counts as commentsCounts,
+            v.is_private as isPrivate
+        from
+            vlog as v
+        left join
+            users as u
+        on
+            v.vloger_id=u.id
+        where
+            v.vloger_id
+        in
+            (
+                select vloger_id from fans where fan_id=#{paramMap.userId}
+                )
+        and
+            v.is_private=0
+        order by
+            v.created_time
+        desc
+    </select>
+
     <select id="getMyLikedVlogList" parameterType="Map" resultType="com.njust.vo.IndexVlogVO">
         select
             v.id as vlogId,
