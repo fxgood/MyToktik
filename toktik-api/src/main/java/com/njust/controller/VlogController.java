@@ -154,4 +154,16 @@ public class VlogController extends BaseInfoProperties {
         PagedGridResult myFollowVlogList = vlogService.getMyFollowVlogList(myId, page, pageSize);
         return GraceJSONResult.ok(myFollowVlogList);
     }
+
+    //获取朋友互相关注的视频
+    @GetMapping("friendList")
+    public GraceJSONResult friendList(@RequestParam String myId,
+                                          @RequestParam Integer page,
+                                          @RequestParam Integer pageSize){
+
+        PagedGridResult gridResult = vlogService.friendVlogList(myId, page, pageSize);
+        return GraceJSONResult.ok(gridResult);
+    }
+
+
 }

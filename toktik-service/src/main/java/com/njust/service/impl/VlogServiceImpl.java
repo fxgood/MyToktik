@@ -90,6 +90,16 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         return addInfoToVlogList(userId, page, myFollowVlogList);
     }
 
+    @Override
+    public PagedGridResult friendVlogList(String userId, Integer page, Integer pageSize) {
+        PageHelper.startPage(page,pageSize);
+        Map<String,Object>mp=new HashMap<>();
+        mp.put("userId",userId);
+        List<IndexVlogVO> friendsVlogList = vlogMapperCustom.getFriendsVlogList(mp);
+        PagedGridResult gridResult = addInfoToVlogList(userId, page, friendsVlogList);
+        return gridResult;
+    }
+
     private PagedGridResult addInfoToVlogList(String userId, Integer page, List<IndexVlogVO> myFollowVlogList) {
         for(IndexVlogVO vo:myFollowVlogList){
             //当前用户是否点赞了该视频,用于首页的视频是否显示小红心
@@ -98,7 +108,8 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
             //当前视频的点赞数
             vo.setLikeCounts(vlogLikedCounts(vlogId));
             //是否关注当前博主
-            vo.setDoIFollowVloger(fansService.isFollow(userId,vo.getVlogerId()));
+            boolean doIFollowThisVloger=fansService.isFollow(userId,vo.getVlogerId());
+            vo.setDoIFollowVloger(doIFollowThisVloger);
         }
         return setterPagedGrid(myFollowVlogList,page);
     }

@@ -46,4 +46,6 @@ public interface VlogService {
     PagedGridResult getMyFollowVlogList(String userId,
                                         Integer page,
                                         Integer pageSize);
+
+    PagedGridResult friendVlogList(String userId, Integer page, Integer pageSize);
 }

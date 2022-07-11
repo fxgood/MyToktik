@@ -30,13 +30,14 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
     @Autowired
     private Sid sid;    //生成uuid的
 
-/*    @Autowired
-    private RedisOperator redis;*/
+
     @Transactional  //涉及到数据库非查询操作
     @Override
     public void createFollow(String userId, String vlogerId) {
         //如果已经关注了,那么就不用操作
-        if (queryFans(userId, vlogerId) != null)
+        /*if (queryFans(userId, vlogerId) != null)
+            return;*/
+        if(isFollow(userId,vlogerId))
             return;
         Fans fans = new Fans();
         fans.setId(sid.nextShort());
@@ -51,7 +52,7 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
         }
         fans.setIsFanFriendOfMine(YesOrNo.NO.type);
         fansMapper.insert(fans);
-
+        //修改redis
         redis.increment(REDIS_MY_FOLLOWS_COUNTS+":"+userId,1);
         redis.increment(REDIS_MY_FANS_COUNTS+":"+vlogerId,1);
         redis.set(REDIS_FANS_AND_VLOGGER_RELATIONSHIP+":"+userId+":"+vlogerId,"1");   //a关注了b
@@ -81,7 +82,6 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
         //使用redis缓存
         String key=REDIS_FANS_AND_VLOGGER_RELATIONSHIP+":"+userId+":"+vlogerId;
         String value=redis.get(key);
-        //查询数据库
         return value != null;
     }
 
@@ -114,7 +114,16 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
 
     //查询一条关注记录
     private Fans queryFans(String myId, String followedId) {
-        Example example = new Example(Fans.class);
+/*        //使用redis进行查询
+        String res=redis.get(REDIS_FANS_AND_VLOGGER_RELATIONSHIP+":"+myId+":"+followedId);
+        if(res==null)
+            return null;
+        Fans fans=new Fans();
+        fans.setVlogerId(followedId);
+        fans.setFanId(myId);
+        fans.setIsFanFriendOfMine(null!=redis.get(REDIS_FANS_AND_VLOGGER_RELATIONSHIP+":"+followedId+":"+myId)?1:0);
+        return fans;*/
+      Example example = new Example(Fans.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("fanId", myId);
         criteria.andEqualTo("vlogerId", followedId);

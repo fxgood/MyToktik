@@ -12,10 +12,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class IndexVlogVO {
-    private String vlogId;
+    //博主的信息
     private String vlogerId;
     private String vlogerFace;
     private String vlogerName;
+    //视频信息
+    private String vlogId;
     private String content;
     private String url;
     private String cover;

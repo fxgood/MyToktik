@@ -18,4 +18,6 @@ public interface VlogMapperCustom /*extends MyMapper<Vlog> 手动写sql无需继
     public List<IndexVlogVO> getMyLikedVlogList(@Param("paramMap")Map<String,Object>map);
 
     public List<IndexVlogVO> getMyFollowVlogList(@Param("paramMap")Map<String,Object>map);
+
+    public List<IndexVlogVO> getFriendsVlogList(@Param("paramMap")Map<String,Object>map);
 }
