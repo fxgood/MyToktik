@@ -7,14 +7,11 @@ import com.njust.grace.result.ResponseStatusEnum;
 import com.njust.service.FansService;
 import com.njust.service.UserService;
 import com.njust.utils.PagedGridResult;
-import com.njust.vo.VlogerVO;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController

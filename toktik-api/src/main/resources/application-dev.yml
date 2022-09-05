@@ -5,9 +5,9 @@ spring:
   datasource:                                     # 数据源的相关配置
     type: com.zaxxer.hikari.HikariDataSource      # 数据源的类型，可以更改为其他的数据源配置，比如druid
     driver-class-name: com.mysql.jdbc.Driver      # mysql/MariaDB 的数据库驱动类名称
-    url: jdbc:mysql://localhost:3307/njust-tiktok?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+    url: jdbc:mysql://47.122.7.189:3306/njust-tiktok?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
     username: root
-    password: 123456
+    password: 123
     hikari:
       connection-timeout: 30000               # 等待连接池分配连接的最大时间（毫秒），超过这个时长还没有可用的连接，则会抛出SQLException
       minimum-idle: 5                         # 最小连接数
@@ -20,21 +20,35 @@ spring:
   redis:
 #    host: 192.168.139.130  原来使用的是NAT,主机和虚拟机在同一个局域网,但是虚拟机不与其他设备在同一个局域网
     host: 192.168.1.111
+#    host: 47.122.7.189
     port: 6379
     database: 0
-    password:
+    password: z@123321
   data:
     mongodb:
-      uri: mongodb://root:root@192.168.1.202:27017
-      database: imooc-red-book
+#      uri: mongodb://root:root@192.168.1.202:27017
+      uri: mongodb://root:root@47.122.7.189:27017
+      database: admin
 
 
 minio:
-  endpoint: http://192.168.1.111:9000
-  fileHost: http://192.168.1.111:9000
+#  endpoint: http://192.168.1.111:9000
+#  fileHost: http://192.168.1.111:9000
+  endpoint: http://47.122.7.189:9000
+  fileHost: http://47.122.7.189:9000
   bucketName: toktik
-  accessKey: minioadmin
-  secretKey: minioadmin
+  accessKey: root
+  secretKey: 12345678
   imgSize: 1024
   fileSize: 1024
+
+
+
+
+
+
+
+
+
+
 

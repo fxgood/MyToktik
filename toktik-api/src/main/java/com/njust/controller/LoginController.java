@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j  //用于日志log error info等
@@ -50,7 +48,7 @@ public class LoginController extends BaseInfoProperties {
         //*9+1目的是防止第一位为0,转为int后会丢失
         //random范围[0,1)  *9后[0,9) +1后 [1,10) 不会多出一位
         log.info("验证码是:" + code);
-//        smsUtils.sendSMS(mobile,code);  //腾讯云验证码
+       smsUtils.sendSMS(mobile,code);  //腾讯云验证码
         // 验证码放入redis中,用于后续的验证
         redis.set(MOBILE_SMSCODE + ":" + mobile, code, 30 * 60);
         return GraceJSONResult.ok();

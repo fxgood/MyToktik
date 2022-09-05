@@ -6,7 +6,7 @@ server:
 
 spring:
   profiles:
-    active: dev # 选择配置文件 application-dev.yml
+    active: prod # 选择配置文件 application-dev.yml
   banner:
     location: classpath:banner/banner.txt
   servlet:

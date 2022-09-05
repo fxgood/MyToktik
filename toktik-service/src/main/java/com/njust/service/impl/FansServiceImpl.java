@@ -8,7 +8,6 @@ import com.njust.mapper.FansMapperCustom;
 import com.njust.pojo.Fans;
 import com.njust.service.FansService;
 import com.njust.utils.PagedGridResult;
-import com.njust.utils.RedisOperator;
 import com.njust.vo.FansVO;
 import com.njust.vo.VlogerVO;
 import org.n3r.idworker.Sid;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

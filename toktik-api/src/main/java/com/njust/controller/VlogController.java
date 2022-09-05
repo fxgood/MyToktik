@@ -7,8 +7,6 @@ import com.njust.enums.YesOrNo;
 import com.njust.grace.result.GraceJSONResult;
 import com.njust.grace.result.ResponseStatusEnum;
 import com.njust.pojo.Users;
-import com.njust.pojo.Vlog;
-import com.njust.service.FansService;
 import com.njust.service.UserService;
 import com.njust.service.VlogService;
 import com.njust.utils.PagedGridResult;
@@ -20,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -62,14 +59,14 @@ public class VlogController extends BaseInfoProperties {
         //判断参数的合法性
         if(StringUtils.isBlank(userId) || StringUtils.isBlank(vlogerId) || StringUtils.isBlank(vlogerId))
             return GraceJSONResult.errorCustom(ResponseStatusEnum.SYSTEM_RESPONSE_NO_INFO);
-        //查询用户是否存在
-        Users user=userService.getUserById(userId);
+        //查询用户是否存在(先注释,io操作影响tps
+        /*Users user=userService.getUserById(userId);
         Users vloger=userService.getUserById(vlogerId);
         if(user==null || vloger==null)
             return GraceJSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST_ERROR);
         IndexVlogVO vlogDetailById = vlogService.getVlogDetailById(userId,vlogId);
         if(vlogDetailById==null)
-            return GraceJSONResult.errorMsg("vlog不存在");
+            return GraceJSONResult.errorMsg("vlog不存在");*/
         vlogService.userLikeVlog(userId,vlogerId,vlogId);
 
         return GraceJSONResult.ok();
